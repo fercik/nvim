@@ -11,16 +11,8 @@ return {
             require("mason-lspconfig").setup({
                 ensure_installed = {
                     "lua_ls",
-                    "angularls",
-                    "cssls",
-                    "dockerls",
-                    "groovyls",
-                    "html",
                     "jdtls",
-                    "eslint",
                     "ts_ls",
-                    "jsonls",
-                    "yamlls",
                 },
             })
         end,
