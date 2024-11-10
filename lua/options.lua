@@ -5,3 +5,4 @@ vim.cmd("set shiftwidth=4")
 vim.cmd("set backspace=indent,eol,start")
 vim.cmd("set autoindent")
 vim.opt.guicursor = ""
+vim.opt.swapfile = false
