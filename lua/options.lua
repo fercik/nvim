@@ -4,5 +4,6 @@ vim.cmd("set softtabstop=4")
 vim.cmd("set shiftwidth=4")
 vim.cmd("set backspace=indent,eol,start")
 vim.cmd("set autoindent")
+vim.cmd("set smartindent")
 vim.opt.guicursor = ""
 vim.opt.swapfile = false
