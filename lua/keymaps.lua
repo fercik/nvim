@@ -4,3 +4,5 @@ vim.keymap.set("n", "<C-v>", '"+p') -- paste
 vim.keymap.set('v', '<C-v>', '"+p') -- paste
 vim.keymap.set('v', '<C-c>', '"+y') -- copy
 vim.keymap.set('v', '<C-x>', '"+d') -- cut
+vim.keymap.set('n', '<C-Right>', '<End>')
+vim.keymap.set('n', '<C-Left>', '<Home>')
