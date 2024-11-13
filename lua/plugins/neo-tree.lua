@@ -10,6 +10,6 @@ return {
         "nvim-tree/nvim-web-devicons",
     },
     config = function()
-        vim.keymap.set("n", "<C-n>", ":Neotree filesystem reveal left<CR>")
+        vim.keymap.set("n", "<leader>k", ":Neotree filesystem reveal left<CR>")
     end,
 }
