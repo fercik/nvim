@@ -2,7 +2,9 @@ return {
 	{
 		"williamboman/mason.nvim",
 		config = function()
-			require("mason").setup()
+			require("mason").setup({
+                PATH = "prepend",
+            })
 		end,
 	},
 	{
@@ -27,6 +29,9 @@ return {
 				capabilities = capabilities,
 			})
             lspconfig.ts_ls.setup({
+                capabilities = capabilities,
+            })
+            lspconfig.jdtls.setup({
                 capabilities = capabilities,
             })
 
