@@ -3,8 +3,8 @@ return {
 		"williamboman/mason.nvim",
 		config = function()
 			require("mason").setup({
-                PATH = "prepend",
-            })
+				PATH = "prepend",
+			})
 		end,
 	},
 	{
@@ -28,12 +28,12 @@ return {
 			lspconfig.lua_ls.setup({
 				capabilities = capabilities,
 			})
-            lspconfig.ts_ls.setup({
-                capabilities = capabilities,
-            })
-            lspconfig.jdtls.setup({
-                capabilities = capabilities,
-            })
+			lspconfig.ts_ls.setup({
+				capabilities = capabilities,
+			})
+			lspconfig.jdtls.setup({
+				capabilities = capabilities,
+			})
 
 			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
 		end,
