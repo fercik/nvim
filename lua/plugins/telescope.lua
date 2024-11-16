@@ -8,10 +8,12 @@ return {
 				defaults = {
 					file_ignore_patterns = {
 						"node_modules",
-                        ".angular",
-                        "dist",
-                        ".cache",
-                        ".git"
+						".angular",
+						"dist",
+						".cache",
+						".git",
+						".idea",
+						".nx",
 					},
 				},
 			})
