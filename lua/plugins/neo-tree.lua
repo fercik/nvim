@@ -1,5 +1,5 @@
 return {
-    "nvim-neo-tree/neo-tree.nvim", 
+    "nvim-neo-tree/neo-tree.nvim",
     branch = "v3.x",
     dependencies = {
         "nvim-lua/plenary.nvim",
@@ -10,6 +10,6 @@ return {
         "nvim-tree/nvim-web-devicons",
     },
     config = function()
-        vim.keymap.set("n", "<leader>k", ":Neotree filesystem reveal left<CR>")
+        vim.keymap.set("n", "<leader>t", ":Neotree filesystem reveal left<CR>")
     end,
 }
