@@ -1,11 +1,9 @@
 return {
 	{
 		"williamboman/mason.nvim",
-		config = function()
-			require("mason").setup({
-				PATH = "prepend",
-			})
-		end,
+		opts = {
+			PATH = "prepend",
+		},
 	},
 	{
 		"williamboman/mason-lspconfig.nvim",
@@ -13,7 +11,6 @@ return {
 			require("mason-lspconfig").setup({
 				ensure_installed = {
 					"lua_ls",
-					"jdtls",
 					"ts_ls",
 				},
 			})
@@ -21,9 +18,17 @@ return {
 	},
 	{
 		"neovim/nvim-lspconfig",
+		dependencies = {
+			"nvim-java/nvim-java",
+		},
 		config = function()
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			local lspconfig = require("lspconfig")
+			require("java").setup({
+                jdk = {
+                    auto_install = false,
+                }
+            })
 
 			lspconfig.lua_ls.setup({
 				capabilities = capabilities,
