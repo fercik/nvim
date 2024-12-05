@@ -9,3 +9,4 @@ vim.cmd(":filetype indent on")
 vim.cmd("set number")
 vim.opt.guicursor = ""
 vim.opt.swapfile = false
+vim.opt.clipboard:append("unnamedplus")
