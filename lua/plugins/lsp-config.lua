@@ -25,7 +25,18 @@ return {
 		config = function()
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			local lspconfig = require("lspconfig")
-
+			local default_node_modules = vim.fn.getcwd() .. "/node_modules"
+            local tsconfig = vim.fn.getcwd() .. "/tsconfig.app.json"
+			local ngls_cmd = {
+				"ngserver",
+				"--stdio",
+				"--tsProbeLocations",
+				default_node_modules,
+				"--ngProbeLocations",
+				default_node_modules,
+                "--configFile",
+                tsconfig,
+			}
 			require("java").setup({
 				jdk = {
 					auto_install = false,
@@ -41,6 +52,15 @@ return {
 			lspconfig.jdtls.setup({
 				capabilities = capabilities,
 			})
+			lspconfig.angularls.setup({
+				cmd = ngls_cmd,
+				capabilities = capabilities,
+				root_dir = require("lspconfig").util.root_pattern("nx.json", "angular.json", "project.json"),
+				on_new_config = function(new_config, new_root_dir)
+					new_config.cmd = ngls_cmd
+					new_config.root_dir = new_root_dir
+				end,
+			})
 			lspconfig.emmet_language_server.setup({
 				capabilities = capabilities,
 				filetypes = {
@@ -50,8 +70,6 @@ return {
 					"scss",
 					"typescript",
 				},
-				-- Read more about this options in the [vscode docs](https://code.visualstudio.com/docs/editor/emmet#_emmet-configuration).
-				-- **Note:** only the options listed in the table are supported.
 				init_options = {
 					---@type table<string, string>
 					includeLanguages = {},
