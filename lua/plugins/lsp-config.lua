@@ -13,6 +13,8 @@ return {
 					"lua_ls",
 					"ts_ls",
 					"angularls",
+					"html",
+					"cssls",
 				},
 			})
 		end,
@@ -26,7 +28,7 @@ return {
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			local lspconfig = require("lspconfig")
 			local default_node_modules = vim.fn.getcwd() .. "/node_modules"
-            local tsconfig = vim.fn.getcwd() .. "/tsconfig.app.json"
+			--local tsconfig = vim.fn.getcwd() .. "/tsconfig.app.json"
 			local ngls_cmd = {
 				"ngserver",
 				"--stdio",
@@ -34,8 +36,6 @@ return {
 				default_node_modules,
 				"--ngProbeLocations",
 				default_node_modules,
-                "--configFile",
-                tsconfig,
 			}
 			require("java").setup({
 				jdk = {
@@ -43,6 +43,12 @@ return {
 				},
 			})
 
+			lspconfig.html.setup({
+				capabilities = capabilities,
+			})
+			lspconfig.cssls.setup({
+				capabilities = capabilities,
+			})
 			lspconfig.lua_ls.setup({
 				capabilities = capabilities,
 			})
@@ -55,7 +61,7 @@ return {
 			lspconfig.angularls.setup({
 				cmd = ngls_cmd,
 				capabilities = capabilities,
-				root_dir = require("lspconfig").util.root_pattern("nx.json", "angular.json", "project.json"),
+				root_dir = require("lspconfig").util.root_pattern("nx.json"),
 				on_new_config = function(new_config, new_root_dir)
 					new_config.cmd = ngls_cmd
 					new_config.root_dir = new_root_dir
