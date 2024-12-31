@@ -10,6 +10,8 @@ vim.cmd("set number")
 vim.opt.guicursor = ""
 vim.opt.swapfile = false
 vim.opt.clipboard:append("unnamedplus")
+vim.opt.number = true
+vim.opt.relativenumber = true
 
 vim.filetype.add({
   extension = {
