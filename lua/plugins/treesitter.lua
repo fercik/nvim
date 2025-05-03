@@ -8,8 +8,6 @@ return {
 			ensure_installed = {
 				"lua",
 				"javascript",
-				"java",
-				"groovy",
 				"html",
 				"jsdoc",
 				"typescript",

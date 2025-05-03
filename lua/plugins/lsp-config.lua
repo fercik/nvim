@@ -27,21 +27,6 @@ return {
 		config = function()
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			local lspconfig = require("lspconfig")
-			local default_node_modules = vim.fn.getcwd() .. "/node_modules"
-			--local tsconfig = vim.fn.getcwd() .. "/tsconfig.app.json"
-			local ngls_cmd = {
-				"ngserver",
-				"--stdio",
-				"--tsProbeLocations",
-				default_node_modules,
-				"--ngProbeLocations",
-				default_node_modules,
-			}
-			require("java").setup({
-				jdk = {
-					auto_install = false,
-				},
-			})
 
 			lspconfig.html.setup({
 				capabilities = capabilities,
@@ -54,18 +39,6 @@ return {
 			})
 			lspconfig.ts_ls.setup({
 				capabilities = capabilities,
-			})
-			lspconfig.jdtls.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.angularls.setup({
-				cmd = ngls_cmd,
-				capabilities = capabilities,
-				root_dir = require("lspconfig").util.root_pattern("nx.json"),
-				on_new_config = function(new_config, new_root_dir)
-					new_config.cmd = ngls_cmd
-					new_config.root_dir = new_root_dir
-				end,
 			})
 			lspconfig.emmet_language_server.setup({
 				capabilities = capabilities,
