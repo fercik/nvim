@@ -6,6 +6,21 @@ return {
 		"nvim-lua/plenary.nvim",
 	},
 	config = function()
-		vim.keymap.set("n", "<space>fb", ":Telescope file_browser path=%:p:h select_buffer=true<CR>")
+		local telescope = require("telescope")
+
+		telescope.setup({
+			defaults = {
+				sorting_strategy = "ascending",
+			},
+			extensions = {
+				file_browser = {
+					grouped = true,
+					hidden = true,
+				},
+			},
+		})
+		telescope.load_extension("file_browser")
+
+		vim.keymap.set("n", "<leader>fb", ":Telescope file_browser path=%:p:h select_buffer=true<CR>")
 	end,
 }
