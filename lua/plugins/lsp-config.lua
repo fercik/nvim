@@ -28,15 +28,24 @@ return {
 			lspconfig.html.setup({
 				capabilities = capabilities,
 			})
+
 			lspconfig.cssls.setup({
 				capabilities = capabilities,
 			})
+
 			lspconfig.lua_ls.setup({
 				capabilities = capabilities,
 			})
+
 			lspconfig.ts_ls.setup({
 				capabilities = capabilities,
 			})
+
+			lspconfig.angularls.setup({
+				capabilities = capabilities,
+				root_dir = require("lspconfig.util").root_pattern("angular.json", "workspace.json", "nx.json"),
+			})
+
 			lspconfig.emmet_language_server.setup({
 				capabilities = capabilities,
 				filetypes = {
