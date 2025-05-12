@@ -7,6 +7,7 @@ return {
 	},
 	config = function()
 		local telescope = require("telescope")
+		local fb_actions = telescope.extensions.file_browser.actions
 
 		telescope.setup({
 			defaults = {
@@ -16,6 +17,12 @@ return {
 				file_browser = {
 					grouped = true,
 					hidden = true,
+					mappings = {
+						["i"] = {
+							["<C-c>"] = fb_actions.create,
+							["<C-r>"] = fb_actions.rename,
+						},
+					},
 				},
 			},
 		})
