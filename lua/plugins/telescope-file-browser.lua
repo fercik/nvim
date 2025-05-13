@@ -21,6 +21,7 @@ return {
 						["i"] = {
 							["<C-c>"] = fb_actions.create,
 							["<C-r>"] = fb_actions.rename,
+							["<C-d>"] = fb_actions.remove,
 						},
 					},
 				},

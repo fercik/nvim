@@ -6,7 +6,7 @@ return {
     config = function()
         require("catppuccin").setup({
             flavour = "frappe",
-            transparent_background = true,
+            transparent_background = false,
         })
         vim.cmd([[colorscheme catppuccin-frappe]])
     end,
