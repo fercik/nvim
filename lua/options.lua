@@ -16,7 +16,7 @@ vim.opt.relativenumber = true
 vim.diagnostic.config({ virtual_text = true })
 
 vim.filetype.add({
-  extension = {
-    ["component.html"] = "html",
-  },
+	extension = {
+		["component.html"] = "html",
+	},
 })
