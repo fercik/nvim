@@ -8,6 +8,6 @@ return {
             flavour = "frappe",
             transparent_background = false,
         })
-        vim.cmd([[colorscheme catppuccin-frappe]])
+        --vim.cmd([[colorscheme catppuccin-frappe]])
     end,
 }
