@@ -13,7 +13,6 @@ return {
             ".eslintrc.json",
             ".eslintrc.yaml",
             ".eslintrc.yml",
-            "package.json", -- opcjonalnie, zakładając że jest dobrze skonfigurowany
         }
 
         null_ls.setup({
