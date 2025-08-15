@@ -1,6 +1,6 @@
 return {
-  "folke/snacks.nvim",
-  opts = {
-    input = {}
-  }
+	"folke/snacks.nvim",
+	opts = {
+		input = {},
+	},
 }
