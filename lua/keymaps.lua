@@ -11,3 +11,9 @@ vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 vim.keymap.set({ "i", "v", "n" }, "<C-h>", "<Home>")
 vim.keymap.set({ "i", "v", "n" }, "<C-l>", "<End>")
+
+vim.keymap.set("n", "<leader>kk", function()
+	require("conform").format({
+		lsp_format = "fallback",
+	})
+end, { desc = "Format current file" })
