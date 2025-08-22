@@ -25,73 +25,33 @@ return {
 			autoformat = false,
 		},
 		config = function()
-			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-			local lspconfig = require("lspconfig")
+			local capabilities = vim.tbl_deep_extend(
+				"force",
+				{},
+				vim.lsp.protocol.make_client_capabilities(),
+				require("cmp_nvim_lsp").default_capabilities()
+			)
 
-			lspconfig.html.setup({
+			vim.lsp.enable("angularls", {
 				capabilities = capabilities,
 			})
-
-			lspconfig.cssls.setup({
+			vim.lsp.enable("ts_ls", {
 				capabilities = capabilities,
 			})
-
-			lspconfig.lua_ls.setup({
+			vim.lsp.enable("lua_ls", {
 				capabilities = capabilities,
 			})
-
-			lspconfig.ts_ls.setup({
+			vim.lsp.enable("emmet_language_server", {
 				capabilities = capabilities,
 			})
-
-			if vim.fn.filereadable("angular.json") == 1 then
-				lspconfig.angularls.setup({
-					capabilities = capabilities,
-					root_dir = function(fname)
-						return require("lspconfig.util").root_pattern(
-							"angular.json",
-							"tsconfig.json",
-							"workspace.json",
-							"nx.json"
-						)(fname)
-					end,
-					settings = {
-						angular = {
-							strictTemplates = true,
-						},
-					},
-				})
-			end
-
-			lspconfig.emmet_language_server.setup({
+			vim.lsp.enable("html", {
 				capabilities = capabilities,
-				filetypes = {
-					"css",
-					"html",
-					"javascript",
-					"scss",
-					"typescript",
-				},
-				init_options = {
-					---@type table<string, string>
-					includeLanguages = {},
-					--- @type string[]
-					excludeLanguages = {},
-					--- @type string[]
-					extensionsPath = {},
-					--- @type table<string, any> [Emmet Docs](https://docs.emmet.io/customization/preferences/)
-					preferences = {},
-					--- @type boolean Defaults to `true`
-					showAbbreviationSuggestions = true,
-					--- @type "always" | "never" Defaults to `"always"`
-					showExpandedAbbreviation = "always",
-					--- @type boolean Defaults to `false`
-					showSuggestionsAsSnippets = false,
-					--- @type table<string, any> [Emmet Docs](https://docs.emmet.io/customization/syntax-profiles/)
-					syntaxProfiles = {},
-					--- @type table<string, string> [Emmet Docs](https://docs.emmet.io/customization/snippets/#variables)
-					variables = {},
-				},
+			})
+			vim.lsp.enable("cssls", {
+				capabilities = capabilities,
+			})
+			vim.lsp.enable("tailwindcss", {
+				capabilities = capabilities,
 			})
 
 			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "[C]ode [A]utocomplete" })
