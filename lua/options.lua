@@ -16,3 +16,11 @@ vim.opt.relativenumber = true
 vim.diagnostic.config({ virtual_text = true })
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
+
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+	pattern = "*.component.html",
+	callback = function()
+		-- Directly set the filetype for the current buffer
+		vim.bo.filetype = "htmlangular"
+	end,
+})
