@@ -22,6 +22,7 @@ return {
 							["<C-c>"] = fb_actions.create,
 							["<C-r>"] = fb_actions.rename,
 							["<C-d>"] = fb_actions.remove,
+							["<C-y>"] = fb_actions.copy,
 						},
 					},
 				},
@@ -29,6 +30,11 @@ return {
 		})
 		telescope.load_extension("file_browser")
 
-		vim.keymap.set("n", "<leader>fb", ":Telescope file_browser path=%:p:h select_buffer=true<CR>", {desc = "[F]ile [B]rowser"})
+		vim.keymap.set(
+			"n",
+			"<leader>fb",
+			":Telescope file_browser path=%:p:h select_buffer=true<CR>",
+			{ desc = "[F]ile [B]rowser" }
+		)
 	end,
 }
