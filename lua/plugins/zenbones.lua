@@ -5,9 +5,9 @@ return {
 	priority = 1000,
 	config = function()
 		vim.cmd("set background=dark")
-		vim.g.rosebones_darken_comments = 45
-		vim.g.rosebones_darkness = "warm"
-        vim.g.rosebones_lightness = "dim"
-		vim.cmd.colorscheme("rosebones")
+		vim.g.rosepine_darken_comments = 45
+		vim.g.rosepine_darkness = "warm"
+        vim.g.rosepine_lightness = "dim"
+		vim.cmd.colorscheme("rose-pine")
 	end,
 }
