@@ -3,13 +3,13 @@ return {
 	opts = {
 		formatters_by_ft = {
 			lua = { "stylua" },
-			javascript = { "prettierd", "prettier", stop_after_first = true },
-			typescript = { "prettierd", "prettier", stop_after_first = true },
-			css = { "prettierd", "prettier", stop_after_first = true },
-			scss = { "prettierd", "prettier", stop_after_first = true },
-			html = { "prettierd", "prettier", stop_after_first = true },
-			htmlangular = { "prettierd", "prettier", stop_after_first = true },
-			json = { "prettierd", "prettier", stop_after_first = true },
+			javascript = { "prettier", stop_after_first = true },
+			typescript = { "prettier", stop_after_first = true },
+			css = { "prettier", stop_after_first = true },
+			scss = { "prettier", stop_after_first = true },
+			html = { "prettier", stop_after_first = true },
+			htmlangular = {  "prettier", stop_after_first = true },
+			json = { "prettier", stop_after_first = true },
 		},
 	},
 }
