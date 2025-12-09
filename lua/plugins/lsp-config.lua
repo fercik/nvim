@@ -15,6 +15,12 @@ return {
 					"angularls",
 					"html",
 					"cssls",
+					"yamlls",
+					"emmet_language_server",
+					"tailwindcss",
+					"dockerls",
+					"jsonls",
+					"jdtls",
 				},
 			})
 		end,
@@ -51,6 +57,9 @@ return {
 				capabilities = capabilities,
 			})
 			vim.lsp.enable("tailwindcss", {
+				capabilities = capabilities,
+			})
+			vim.lsp.enable("jdtls", {
 				capabilities = capabilities,
 			})
 

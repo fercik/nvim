@@ -39,3 +39,5 @@ vim.api.nvim_create_autocmd("FileChangedShellPost", {
 		vim.notify("Plik został zaktualizowany na dysku i przeładowany.", vim.log.levels.INFO)
 	end,
 })
+
+vim.env.JDTLS_JVM_ARGS = "-javaagent:" .. vim.fn.expand("~/.local/share/nvim/mason/packages/jdtls/lombok.jar")
