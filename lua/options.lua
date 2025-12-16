@@ -7,7 +7,6 @@ vim.cmd("set autoindent")
 vim.cmd("set smartindent")
 vim.cmd("filetype indent on")
 vim.cmd("set number")
-vim.opt.guicursor = ""
 vim.opt.swapfile = false
 vim.opt.clipboard:append("unnamedplus")
 vim.opt.number = true

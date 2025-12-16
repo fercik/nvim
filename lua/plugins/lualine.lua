@@ -2,7 +2,7 @@ return {
 	"nvim-lualine/lualine.nvim",
 	opts = {
 		options = {
-			theme = "tokyonight-night",
+			theme = "material",
 		},
 	},
 }
