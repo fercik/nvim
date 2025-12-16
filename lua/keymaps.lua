@@ -12,7 +12,13 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 vim.keymap.set({ "i", "v", "n" }, "<C-h>", "<Home>")
 vim.keymap.set({ "i", "v", "n" }, "<C-l>", "<End>")
 
-vim.keymap.set("n", "<C-j>", "<C-\\><C-n><C-w>h", { silent = true })
-vim.keymap.set("n", "<C-k>", "<C-\\><C-n><C-w>j", { silent = true })
-vim.keymap.set("n", "<C-i>", "<C-\\><C-n><C-w>k", { silent = true })
-vim.keymap.set("n", "<C-l>", "<C-\\><C-n><C-w>l", { silent = true })
+local mappings = {
+	Left = { cmd = "h", desc = "Move window left" },
+	Down = { cmd = "j", desc = "Move window down" },
+	Up = { cmd = "k", desc = "Move window up" },
+	Right = { cmd = "l", desc = "Move window right" },
+}
+
+for key, info in pairs(mappings) do
+	vim.keymap.set("n", "<leader><" .. key .. ">", "<C-\\><C-n><C-w>" .. info.cmd, { silent = true, desc = info.desc })
+end
