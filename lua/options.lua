@@ -11,6 +11,7 @@ vim.opt.swapfile = false
 vim.opt.clipboard:append("unnamedplus")
 vim.opt.number = true
 vim.opt.relativenumber = true
+vim.opt.winborder = "rounded"
 
 vim.diagnostic.config({ virtual_text = true })
 vim.g.loaded_netrw = 1
@@ -21,6 +22,14 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 	callback = function()
 		-- Directly set the filetype for the current buffer
 		vim.bo.filetype = "htmlangular"
+	end,
+})
+
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+	pattern = "*.mdc",
+	callback = function()
+		-- Directly set the filetype for the current buffer
+		vim.bo.filetype = "markdown"
 	end,
 })
 

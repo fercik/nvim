@@ -10,6 +10,7 @@ return {
 			html = { "prettierd", "prettier", stop_after_first = true },
 			htmlangular = { "prettierd", "prettier", stop_after_first = true },
 			json = { "prettierd", "prettier", stop_after_first = true },
+			markdown = { "markdownlint", "prettier", stop_after_first = true },
 		},
 	},
 	config = function(_, opts)
