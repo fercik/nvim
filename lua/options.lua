@@ -18,7 +18,7 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-	pattern = "*.component.html",
+	pattern = "*.html",
 	callback = function()
 		-- Directly set the filetype for the current buffer
 		vim.bo.filetype = "htmlangular"
