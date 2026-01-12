@@ -1,5 +1,6 @@
 return {
 	"baliestri/aura-theme",
+	enabled = false,
 	lazy = false,
 	priority = 1000,
 	config = function(plugin)

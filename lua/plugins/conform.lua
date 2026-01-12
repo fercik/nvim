@@ -1,5 +1,9 @@
 return {
 	"stevearc/conform.nvim",
+	event = "BufWritePre",
+	keys = {
+		{ "<leader>kk", function() require("conform").format({ lsp_format = "fallback" }) end, desc = "Format current file" },
+	},
 	opts = {
 		formatters_by_ft = {
 			lua = { "stylua" },
@@ -13,13 +17,4 @@ return {
 			markdown = { "markdownlint", "prettier", stop_after_first = true },
 		},
 	},
-	config = function(_, opts)
-		require("conform").setup(opts)
-
-		vim.keymap.set("n", "<leader>kk", function()
-			require("conform").format({
-				lsp_format = "fallback",
-			})
-		end, { desc = "Format current file" })
-	end,
 }

@@ -3,22 +3,14 @@ return {
         "ThePrimeagen/harpoon",
         branch = "harpoon2",
         dependencies = { "nvim-lua/plenary.nvim" },
+        keys = {
+            { "<leader>hl", function() require("harpoon").ui:toggle_quick_menu(require("harpoon"):list()) end, desc = "[H]arpoon [L]ist" },
+            { "<leader>ha", function() require("harpoon"):list():add() end, desc = "[H]arpoon [A]dd" },
+            { "<leader>hn", function() require("harpoon"):list():next() end, desc = "[H]arpoon [N]ext" },
+            { "<leader>hb", function() require("harpoon"):list():prev() end, desc = "[H]arpoon [B]ack" },
+        },
         config = function()
-            local harpoon = require("harpoon")
-            harpoon.setup({})
-
-            vim.keymap.set("n", "<leader>hl", function()
-                harpoon.ui:toggle_quick_menu(harpoon:list())
-            end, { desc = "[H]arpoon [L]ist" })
-            vim.keymap.set("n", "<leader>ha", function()
-                harpoon:list():add()
-            end, { desc = "[H]arpoon [A]dd" })
-            vim.keymap.set("n", "<leader>hn", function()
-                harpoon:list():next()
-            end, { desc = "[H]arpoon [N]ext" })
-            vim.keymap.set("n", "<leader>hb", function()
-                harpoon:list():prev()
-            end, { desc = "[H]arpoon [B]ack" })
+            require("harpoon").setup({})
         end,
     },
 }
