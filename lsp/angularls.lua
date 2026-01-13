@@ -12,41 +12,37 @@
 --- })
 --- ```
 
--- Angular requires a node_modules directory to probe for @angular/language-service and typescript
--- in order to use your projects configured versions.
-local root_dir = vim.fn.getcwd()
-local node_modules_dir = vim.fs.find("node_modules", { path = root_dir, upward = true })[1]
-local project_root = node_modules_dir and vim.fs.dirname(node_modules_dir) or "?"
+local function get_probe_dir(project_root)
+	if not project_root then
+		return nil
+	end
 
-local function get_probe_dir()
-	return project_root and (project_root .. "/node_modules") or ""
+	local probe_dir = vim.fs.joinpath(project_root, "node_modules")
+	return vim.uv.fs_stat(probe_dir) and probe_dir or nil
 end
 
-local function get_angular_core_version()
+local function get_angular_core_version(project_root)
 	if not project_root then
-		return ""
+		return nil
 	end
 
 	local package_json = project_root .. "/package.json"
 	if not vim.uv.fs_stat(package_json) then
-		return ""
+		return nil
 	end
 
 	local contents = io.open(package_json):read("*a")
 	local json = vim.json.decode(contents)
 	if not json.dependencies then
-		return ""
+		return nil
 	end
 
 	local angular_core_version = json.dependencies["@angular/core"]
 
 	angular_core_version = angular_core_version and angular_core_version:match("%d+%.%d+%.%d+")
 
-	return angular_core_version
+	return angular_core_version or nil
 end
-
-local default_probe_dir = get_probe_dir()
-local default_angular_core_version = get_angular_core_version()
 
 -- structure should be like
 -- - $EXTENSION_PATH
@@ -106,32 +102,53 @@ end
 
 local extension_path = get_extension_path(ngserver_exe)
 
--- angularls will get module by `require.resolve(PROBE_PATH, MODULE_NAME)` of nodejs
--- Filter out nil values to avoid invalid probe paths
-local ts_probe_locations = vim.tbl_filter(function(p)
-	return p ~= nil and p ~= ""
-end, { extension_path, default_probe_dir })
-
-local ts_probe_dirs = vim.iter(ts_probe_locations):join(",")
-
-local ng_probe_dirs = vim.iter(ts_probe_locations)
-	:map(function(p)
-		return vim.fs.joinpath(p, "@angular/language-server/node_modules")
-	end)
-	:join(",")
-
 ---@type vim.lsp.Config
 return {
-	cmd = {
-		"ngserver",
-		"--stdio",
-		"--tsProbeLocations",
-		ts_probe_dirs,
-		"--ngProbeLocations",
-		ng_probe_dirs,
-		"--angularCoreVersion",
-		default_angular_core_version,
-	},
+	-- Compute probe paths when the server starts so opening Neovim outside the
+	-- project still resolves the correct Angular workspace.
+	cmd = function(_, bufnr)
+		local root = vim.fs.root(bufnr, { "angular.json", "nx.json" }) or vim.fn.getcwd()
+		if not root then
+			return nil
+		end
+
+		-- Resolve the project root that actually contains node_modules.
+		local node_modules_dir = vim.fs.find("node_modules", { path = root, upward = true })[1]
+		local project_root = node_modules_dir and vim.fs.dirname(node_modules_dir) or root
+
+		local probe_dir = get_probe_dir(project_root)
+		local angular_core_version = get_angular_core_version(project_root)
+
+		-- angularls will get module by `require.resolve(PROBE_PATH, MODULE_NAME)` of nodejs
+		-- Filter out nil values to avoid invalid probe paths
+		local ts_probe_locations = vim.tbl_filter(function(p)
+			return p ~= nil and p ~= ""
+		end, { extension_path, probe_dir })
+
+		-- If no probe locations are available, abort starting the server to avoid a broken instance.
+		if #ts_probe_locations == 0 then
+			return nil
+		end
+
+		local ts_probe_dirs = vim.iter(ts_probe_locations):join(",")
+
+		local ng_probe_dirs = vim.iter(ts_probe_locations)
+			:map(function(p)
+				return vim.fs.joinpath(p, "@angular/language-server/node_modules")
+			end)
+			:join(",")
+
+		return {
+			"ngserver",
+			"--stdio",
+			"--tsProbeLocations",
+			ts_probe_dirs,
+			"--ngProbeLocations",
+			ng_probe_dirs,
+			"--angularCoreVersion",
+			angular_core_version or "",
+		}
+	end,
 	filetypes = { "typescript", "html", "typescriptreact", "typescript.tsx", "htmlangular" },
 	root_markers = { "angular.json", "nx.json" },
 }
