@@ -4,6 +4,7 @@ return {
 	lazy = false,
 	config = function()
 		require("mini.starter").setup()
+		require("mini.pairs").setup()
 
 		vim.api.nvim_create_autocmd("VimEnter", {
 			callback = function()

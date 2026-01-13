@@ -22,3 +22,15 @@ local mappings = {
 for key, info in pairs(mappings) do
 	vim.keymap.set("n", "<leader><" .. key .. ">", "<C-\\><C-n><C-w>" .. info.cmd, { silent = true, desc = info.desc })
 end
+
+-- Diagnostics
+vim.keymap.set("n", "<leader>e", function()
+	vim.diagnostic.open_float({
+		border = "rounded",
+		max_width = 80,
+		source = true,
+	})
+end, { desc = "Show diagnostic [E]rror" })
+vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
+vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Diagnostics to loclist" })

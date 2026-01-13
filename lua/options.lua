@@ -13,38 +13,7 @@ vim.opt.relativenumber = true
 vim.opt.winborder = "rounded"
 
 vim.diagnostic.config({ virtual_text = true })
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
 
-vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-	pattern = "*.html",
-	callback = function()
-		-- Directly set the filetype for the current buffer
-		vim.bo.filetype = "htmlangular"
-	end,
-})
-
-vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-	pattern = "*.mdc",
-	callback = function()
-		-- Directly set the filetype for the current buffer
-		vim.bo.filetype = "markdown"
-	end,
-})
-
--- Włącz autoread
 vim.opt.autoread = true
-
--- Automatycznie odświeżaj pliki zmienione poza Neovim
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
-	pattern = "*",
-	command = "checktime",
-})
-
-vim.api.nvim_create_autocmd("FileChangedShellPost", {
-	callback = function()
-		vim.notify("Plik został zaktualizowany na dysku i przeładowany.", vim.log.levels.INFO)
-	end,
-})
 
 vim.env.JDTLS_JVM_ARGS = "-javaagent:" .. vim.fn.expand("~/.local/share/nvim/mason/packages/jdtls/lombok.jar")

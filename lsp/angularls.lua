@@ -55,15 +55,68 @@ local default_angular_core_version = get_angular_core_version()
 --       - bin
 --         - ngserver
 --   - typescript
-local ngserver_exe = vim.fn.exepath("ngserver")
-local ngserver_path = #(ngserver_exe or "") > 0 and vim.fs.dirname(vim.uv.fs_realpath(ngserver_exe)) or "?"
-local extension_path = vim.fs.normalize(vim.fs.joinpath(ngserver_path, "../../../"))
+
+--- Find ngserver executable, checking PATH first then falling back to Mason's bin directory
+---@return string|nil path to ngserver executable, or nil if not found
+local function find_ngserver()
+	-- First, try to find ngserver in PATH
+	local ngserver_exe = vim.fn.exepath("ngserver")
+	if ngserver_exe and #ngserver_exe > 0 then
+		return ngserver_exe
+	end
+
+	-- Fallback: check Mason's bin directory
+	local mason_bin = vim.fs.joinpath(vim.fn.stdpath("data"), "mason", "bin", "ngserver")
+	if vim.uv.fs_stat(mason_bin) then
+		return mason_bin
+	end
+
+	return nil
+end
+
+local ngserver_exe = find_ngserver()
+
+--- Get the extension path from the ngserver executable location
+---@param exe string|nil path to ngserver executable
+---@return string|nil normalized extension path, or nil if invalid
+local function get_extension_path(exe)
+	if not exe then
+		return nil
+	end
+
+	local real_path = vim.uv.fs_realpath(exe)
+	if not real_path then
+		return nil
+	end
+
+	local ngserver_dir = vim.fs.dirname(real_path)
+	if not ngserver_dir then
+		return nil
+	end
+
+	-- Navigate up from .../bin/ngserver to the extension root
+	local ext_path = vim.fs.normalize(vim.fs.joinpath(ngserver_dir, "../../../"))
+	-- Validate the extension path exists
+	if vim.uv.fs_stat(ext_path) then
+		return ext_path
+	end
+
+	return nil
+end
+
+local extension_path = get_extension_path(ngserver_exe)
 
 -- angularls will get module by `require.resolve(PROBE_PATH, MODULE_NAME)` of nodejs
-local ts_probe_dirs = vim.iter({ extension_path, default_probe_dir }):join(",")
-local ng_probe_dirs = vim.iter({ extension_path, default_probe_dir })
+-- Filter out nil values to avoid invalid probe paths
+local ts_probe_locations = vim.tbl_filter(function(p)
+	return p ~= nil and p ~= ""
+end, { extension_path, default_probe_dir })
+
+local ts_probe_dirs = vim.iter(ts_probe_locations):join(",")
+
+local ng_probe_dirs = vim.iter(ts_probe_locations)
 	:map(function(p)
-		return vim.fs.joinpath(p, "/@angular/language-server/node_modules")
+		return vim.fs.joinpath(p, "@angular/language-server/node_modules")
 	end)
 	:join(",")
 
