@@ -41,6 +41,21 @@
 --- It is recommended to use the same version of TypeScript in all packages, and therefore have it available in your workspace root. The location of the TypeScript binary will be determined automatically, but only once.
 ---
 
+--- Find the workspace root for Nx/monorepo projects
+---@param bufnr number
+---@return string|nil
+local function find_workspace_root(bufnr)
+	-- For Nx workspaces, look for nx.json first, then fall back to lock files
+	local nx_root = vim.fs.root(bufnr, { "nx.json" })
+	if nx_root then
+		return nx_root
+	end
+
+	-- Fall back to package manager lock files for non-Nx projects
+	local lock_files = { "package-lock.json", "yarn.lock", "pnpm-lock.yaml", "bun.lockb", "bun.lock" }
+	return vim.fs.root(bufnr, lock_files)
+end
+
 ---@type vim.lsp.Config
 return {
 	init_options = {
@@ -50,18 +65,45 @@ return {
 			includeCompletionsForImportStatements = true,
 			includePackageJsonAutoImports = "auto",
 			autoImportFileExcludePatterns = {},
+			importModuleSpecifierPreference = "relative",
+			allowIncompleteCompletions = true,
+		},
+		-- Use TypeScript from the workspace's node_modules
+		tsserver = {
+			logVerbosity = "off",
 		},
 	},
-	cmd = { "typescript-language-server", "--stdio" },
+	cmd = function(_, bufnr)
+		local root = find_workspace_root(bufnr)
+		-- Use workspace TypeScript if available
+		if root then
+			local ts_path = vim.fs.joinpath(root, "node_modules", "typescript", "lib")
+			if vim.uv.fs_stat(ts_path) then
+				return {
+					"typescript-language-server",
+					"--stdio",
+					"--tsserver-path",
+					vim.fs.joinpath(root, "node_modules", "typescript", "lib", "tsserver.js"),
+				}
+			end
+		end
+		return { "typescript-language-server", "--stdio" }
+	end,
 	settings = {
 		typescript = {
 			suggest = {
 				autoImports = true,
+				includeCompletionsForModuleExports = true,
+				includeAutomaticOptionalChainCompletions = true,
+			},
+			preferences = {
+				includePackageJsonAutoImports = "auto",
 			},
 		},
 		javascript = {
 			suggest = {
 				autoImports = true,
+				includeCompletionsForModuleExports = true,
 			},
 		},
 	},
@@ -74,18 +116,10 @@ return {
 		"typescript.tsx",
 	},
 	root_dir = function(bufnr, on_dir)
-		-- The project root is where the LSP can be started from
-		-- As stated in the documentation above, this LSP supports monorepos and simple projects.
-		-- We select then from the project root, which is identified by the presence of a package
-		-- manager lock file.
-		local project_root_markers = { "package-lock.json", "yarn.lock", "pnpm-lock.yaml", "bun.lockb", "bun.lock" }
-		-- Give the root markers equal priority by wrapping them in a table
-		local project_root = vim.fs.root(bufnr, { project_root_markers })
-		if not project_root then
-			return
+		local root = find_workspace_root(bufnr)
+		if root then
+			on_dir(root)
 		end
-
-		on_dir(project_root)
 	end,
 	handlers = {
 		-- handle rename request for certain code actions like extracting functions / types
