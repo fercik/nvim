@@ -43,25 +43,25 @@
 
 ---@type vim.lsp.Config
 return {
-	init_options = { hostInfo = "neovim" },
+	init_options = {
+		hostInfo = "neovim",
+		preferences = {
+			includeCompletionsForModuleExports = true,
+			includeCompletionsForImportStatements = true,
+			includePackageJsonAutoImports = "auto",
+			autoImportFileExcludePatterns = {},
+		},
+	},
 	cmd = { "typescript-language-server", "--stdio" },
 	settings = {
 		typescript = {
 			suggest = {
 				autoImports = true,
 			},
-			preferences = {
-				includeCompletionsForModuleExports = true,
-				includeCompletionsForImportStatements = true,
-			},
 		},
 		javascript = {
 			suggest = {
 				autoImports = true,
-			},
-			preferences = {
-				includeCompletionsForModuleExports = true,
-				includeCompletionsForImportStatements = true,
 			},
 		},
 	},
