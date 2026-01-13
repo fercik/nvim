@@ -45,6 +45,26 @@
 return {
 	init_options = { hostInfo = "neovim" },
 	cmd = { "typescript-language-server", "--stdio" },
+	settings = {
+		typescript = {
+			suggest = {
+				autoImports = true,
+			},
+			preferences = {
+				includeCompletionsForModuleExports = true,
+				includeCompletionsForImportStatements = true,
+			},
+		},
+		javascript = {
+			suggest = {
+				autoImports = true,
+			},
+			preferences = {
+				includeCompletionsForModuleExports = true,
+				includeCompletionsForImportStatements = true,
+			},
+		},
+	},
 	filetypes = {
 		"javascript",
 		"javascriptreact",
