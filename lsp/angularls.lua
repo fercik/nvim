@@ -132,11 +132,18 @@ return {
 
 		local ts_probe_dirs = vim.iter(ts_probe_locations):join(",")
 
-		local ng_probe_dirs = vim.iter(ts_probe_locations)
-			:map(function(p)
-				return vim.fs.joinpath(p, "@angular/language-server/node_modules")
-			end)
-			:join(",")
+		-- For ngProbeLocations:
+		-- - Mason's extension path needs @angular/language-server/node_modules (language-service is bundled there)
+		-- - Project's node_modules should be used directly (language-service is a direct dependency)
+		local ng_probe_locations = {}
+		if extension_path then
+			table.insert(ng_probe_locations, vim.fs.joinpath(extension_path, "@angular/language-server/node_modules"))
+		end
+		if probe_dir then
+			-- Add project's node_modules directly - @angular/language-service lives here
+			table.insert(ng_probe_locations, probe_dir)
+		end
+		local ng_probe_dirs = vim.iter(ng_probe_locations):join(",")
 
 		return {
 			"ngserver",
