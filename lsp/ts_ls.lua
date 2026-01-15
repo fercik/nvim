@@ -63,7 +63,8 @@ return {
 		preferences = {
 			includeCompletionsForModuleExports = true,
 			includeCompletionsForImportStatements = true,
-			includePackageJsonAutoImports = "auto",
+			-- "on" forces scanning package.json deps, "auto" can be too conservative
+			includePackageJsonAutoImports = "on",
 			autoImportFileExcludePatterns = {},
 			importModuleSpecifierPreference = "relative",
 			allowIncompleteCompletions = true,
