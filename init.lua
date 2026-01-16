@@ -21,7 +21,11 @@ vim.g.maplocalleader = " "
 require("options")
 require("keymaps")
 require("autocmds")
-require("lazy").setup("plugins", {
+require("lazy").setup({
+	spec = {
+		{ import = "plugins" },
+		{ import = "themes" },
+	},
 	dev = {
 		path = "~/.config/nvim/lua",
 	},
