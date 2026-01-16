@@ -23,4 +23,3 @@ vim.api.nvim_create_autocmd("FileChangedShellPost", {
 		vim.notify("File was updated on disk and reloaded.", vim.log.levels.INFO)
 	end,
 })
-
