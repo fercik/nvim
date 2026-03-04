@@ -2,7 +2,13 @@ return {
 	"stevearc/conform.nvim",
 	event = "BufWritePre",
 	keys = {
-		{ "<leader>kk", function() require("conform").format({ lsp_format = "fallback" }) end, desc = "Format current file" },
+		{
+			"<leader>kk",
+			function()
+				require("conform").format({ lsp_format = "fallback" })
+			end,
+			desc = "Format current file",
+		},
 	},
 	opts = {
 		formatters_by_ft = {
