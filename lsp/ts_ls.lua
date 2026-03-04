@@ -41,19 +41,34 @@
 --- It is recommended to use the same version of TypeScript in all packages, and therefore have it available in your workspace root. The location of the TypeScript binary will be determined automatically, but only once.
 ---
 
---- Find the workspace root for Nx/monorepo projects
 ---@param bufnr number
----@return string|nil
+---@return boolean
+local function is_deno_project(bufnr)
+	local deno_root = vim.fs.root(bufnr, { "deno.json", "deno.jsonc", "deno.lock" })
+	return deno_root ~= nil
+end
+
+---@param bufnr number
+---@return string
 local function find_workspace_root(bufnr)
-	-- For Nx workspaces, look for nx.json first, then fall back to lock files
-	local nx_root = vim.fs.root(bufnr, { "nx.json" })
-	if nx_root then
-		return nx_root
+	local root = vim.fs.root(bufnr, {
+		"nx.json",
+		"angular.json",
+		"package.json",
+		"tsconfig.json",
+		"jsconfig.json",
+		".git",
+	})
+	if root then
+		return root
 	end
 
-	-- Fall back to package manager lock files for non-Nx projects
-	local lock_files = { "package-lock.json", "yarn.lock", "pnpm-lock.yaml", "bun.lockb", "bun.lock" }
-	return vim.fs.root(bufnr, lock_files)
+	local bufname = vim.api.nvim_buf_get_name(bufnr)
+	if bufname ~= "" then
+		return vim.fs.dirname(vim.fs.normalize(bufname))
+	end
+
+	return vim.fn.getcwd()
 end
 
 ---@type vim.lsp.Config
@@ -74,23 +89,11 @@ return {
 			logVerbosity = "off",
 		},
 	},
-	cmd = function(_, bufnr)
-		local root = find_workspace_root(bufnr)
-		-- Use workspace TypeScript if available
-		if root then
-			local ts_path = vim.fs.joinpath(root, "node_modules", "typescript", "lib")
-			if vim.uv.fs_stat(ts_path) then
-				return {
-					"typescript-language-server",
-					"--stdio",
-					"--tsserver-path",
-					vim.fs.joinpath(root, "node_modules", "typescript", "lib", "tsserver.js"),
-				}
-			end
-		end
-		return { "typescript-language-server", "--stdio" }
-	end,
+	cmd = { "typescript-language-server", "--stdio" },
 	settings = {
+		implicitProjectConfiguration = {
+			experimentalDecorators = true,
+		},
 		typescript = {
 			suggest = {
 				autoImports = true,
@@ -117,10 +120,11 @@ return {
 		"typescript.tsx",
 	},
 	root_dir = function(bufnr, on_dir)
-		local root = find_workspace_root(bufnr)
-		if root then
-			on_dir(root)
+		if is_deno_project(bufnr) then
+			return
 		end
+
+		on_dir(find_workspace_root(bufnr))
 	end,
 	handlers = {
 		-- handle rename request for certain code actions like extracting functions / types

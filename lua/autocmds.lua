@@ -1,7 +1,11 @@
+local angular_workspace = require("angular_workspace")
+
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 	pattern = "*.html",
-	callback = function()
-		vim.bo.filetype = "htmlangular"
+	callback = function(args)
+		if angular_workspace.is_angular_buffer(args.buf) then
+			vim.bo[args.buf].filetype = "htmlangular"
+		end
 	end,
 })
 
