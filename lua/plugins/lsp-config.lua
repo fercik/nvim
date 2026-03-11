@@ -13,6 +13,7 @@ return {
 		dependencies = { "williamboman/mason.nvim" },
 		config = function()
 			require("mason-lspconfig").setup({
+				automatic_enable = false,
 				ensure_installed = {
 					"lua_ls",
 					"ts_ls",
@@ -41,16 +42,47 @@ return {
 				),
 			})
 
-			vim.lsp.enable("angularls")
-			vim.lsp.enable("ts_ls")
-			vim.lsp.enable("lua_ls")
-			vim.lsp.enable("emmet_language_server")
-			vim.lsp.enable("html")
-			vim.lsp.enable("cssls")
-			vim.lsp.enable("jdtls")
-			vim.lsp.enable("yamlls")
-			vim.lsp.enable("dockerls")
-			vim.lsp.enable("jsonls")
+			local function apply_local_lsp_config(server)
+				local path = vim.fs.joinpath(vim.fn.stdpath("config"), "lsp", server .. ".lua")
+				if not vim.uv.fs_stat(path) then
+					return
+				end
+
+				local ok_loader, loader = pcall(loadfile, path)
+				if not ok_loader or type(loader) ~= "function" then
+					return
+				end
+
+				local ok_config, config = pcall(loader)
+				if ok_config and type(config) == "table" then
+					vim.lsp.config(server, config)
+				end
+			end
+
+			for _, server in ipairs({
+				"angularls",
+				"cssls",
+				"emmet_language_server",
+				"html",
+				"jdtls",
+				"lua_ls",
+				"ts_ls",
+			}) do
+				apply_local_lsp_config(server)
+			end
+
+			vim.lsp.enable({
+				"angularls",
+				"cssls",
+				"dockerls",
+				"emmet_language_server",
+				"html",
+				"jdtls",
+				"jsonls",
+				"lua_ls",
+				"ts_ls",
+				"yamlls",
+			})
 
 			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "[C]ode [A]ction" })
 		end,
