@@ -81,7 +81,7 @@ return {
 			-- "on" forces scanning package.json deps, "auto" can be too conservative
 			includePackageJsonAutoImports = "on",
 			autoImportFileExcludePatterns = {},
-			importModuleSpecifierPreference = "relative",
+			importModuleSpecifierPreference = "shortest",
 			allowIncompleteCompletions = true,
 		},
 		-- Use TypeScript from the workspace's node_modules
@@ -102,6 +102,7 @@ return {
 			},
 			preferences = {
 				includePackageJsonAutoImports = "auto",
+				importModuleSpecifierPreference = "shortest",
 			},
 		},
 		javascript = {
