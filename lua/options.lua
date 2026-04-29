@@ -5,7 +5,6 @@ vim.opt.shiftwidth = 4
 vim.opt.backspace = { "indent", "eol", "start" }
 vim.opt.autoindent = true
 vim.opt.smartindent = true
-vim.cmd("filetype indent on")
 vim.opt.swapfile = false
 vim.opt.clipboard:append("unnamedplus")
 vim.opt.number = true
