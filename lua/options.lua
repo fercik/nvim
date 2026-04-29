@@ -15,5 +15,3 @@ vim.opt.winborder = "rounded"
 vim.diagnostic.config({ virtual_text = true })
 
 vim.opt.autoread = true
-
-vim.env.JDTLS_JVM_ARGS = "-javaagent:" .. vim.fn.expand("~/.local/share/nvim/mason/packages/jdtls/lombok.jar")

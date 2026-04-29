@@ -12,19 +12,20 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = { "williamboman/mason.nvim" },
 		config = function()
-			require("mason-lspconfig").setup({
-				automatic_enable = false,
-				ensure_installed = {
-					"lua_ls",
-					"ts_ls",
-					"angularls",
-					"html",
-					"cssls",
-					"yamlls",
-					"emmet_language_server",
-					"dockerls",
-					"jsonls",
-					"jdtls",
+				require("mason-lspconfig").setup({
+					automatic_enable = false,
+					ensure_installed = {
+						"lua_ls",
+						"ts_ls",
+						"angularls",
+						"html",
+						"cssls",
+						"tailwindcss",
+						"yamlls",
+						"emmet_language_server",
+						"dockerls",
+						"jsonls",
+						"jdtls",
 				},
 			})
 		end,
@@ -80,6 +81,7 @@ return {
 				"jdtls",
 				"jsonls",
 				"lua_ls",
+				"tailwindcss",
 				"ts_ls",
 				"yamlls",
 			})

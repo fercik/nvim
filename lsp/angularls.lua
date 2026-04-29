@@ -115,11 +115,16 @@ local function get_extension_path(exe)
 	return nil
 end
 
-local extension_path = get_extension_path(find_ngserver())
+local ngserver = find_ngserver()
+local extension_path = get_extension_path(ngserver)
 
 ---@type vim.lsp.Config
 return {
 	cmd = function(dispatchers, config)
+		if not ngserver then
+			return nil
+		end
+
 		local project_root = (config and config.root_dir) or fn.getcwd()
 		local probe_dir = get_probe_dir(project_root)
 		local angular_core_version = get_angular_core_version(project_root)
@@ -140,7 +145,7 @@ return {
 		end
 
 		local cmd = {
-			"ngserver",
+			ngserver,
 			"--stdio",
 			"--tsProbeLocations",
 			table.concat(ts_probe_locations, ","),
@@ -151,7 +156,7 @@ return {
 		}
 
 		return vim.lsp.rpc.start(cmd, dispatchers, {
-			cwd = config and config.cmd_cwd,
+			cwd = (config and config.cmd_cwd) or project_root,
 			env = config and config.cmd_env,
 			detached = config and config.detached,
 		})
