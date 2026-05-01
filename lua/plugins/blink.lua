@@ -1,3 +1,84 @@
+local function path_preview_content(documentation)
+	if type(documentation) ~= "table" or documentation.kind ~= "markdown" or type(documentation.value) ~= "string" then
+		return nil
+	end
+
+	if not vim.startswith(documentation.value, "```") then
+		return nil
+	end
+
+	local first_newline = documentation.value:find("\n", 1, true)
+	if not first_newline then
+		return nil
+	end
+
+	local content = documentation.value:sub(first_newline + 1)
+	if content:sub(-3) == "```" then
+		content = content:sub(1, -4)
+	end
+
+	return content
+end
+
+local function path_preview_language(full_path)
+	if type(full_path) ~= "string" or full_path == "" then
+		return nil
+	end
+
+	local filetype = vim.filetype.match({ filename = full_path })
+	local extension = vim.fn.fnamemodify(full_path, ":e")
+	local candidate = filetype or (extension ~= "" and extension or nil)
+
+	if not candidate then
+		return nil
+	end
+
+	return vim.treesitter.language.get_lang(candidate) or candidate
+end
+
+local function has_treesitter_highlighting(language)
+	if not language then
+		return false
+	end
+
+	local ok_parser, parser = pcall(vim.treesitter.get_string_parser, "", language)
+	if not ok_parser or not parser then
+		return false
+	end
+
+	local ok_query, query = pcall(vim.treesitter.query.get, language, "highlights")
+	return ok_query and query ~= nil
+end
+
+local function normalize_path_preview(item)
+	if item.source_id ~= "path" then
+		return item
+	end
+
+	local content = path_preview_content(item.documentation)
+	if not content then
+		return item
+	end
+
+	local language = path_preview_language(vim.tbl_get(item, "data", "full_path"))
+	if language and has_treesitter_highlighting(language) then
+		item.documentation = vim.tbl_extend("force", item.documentation, {
+			value = string.format("```%s\n%s```", language, content),
+		})
+		return item
+	end
+
+	item.documentation = {
+		kind = "plaintext",
+		value = content,
+		draw = function(opts)
+			opts.default_implementation({ use_treesitter_highlighting = false })
+		end,
+	}
+
+	return item
+end
+
 return {
 	"saghen/blink.cmp",
 	-- optional: provides snippets for the snippet source
@@ -111,6 +192,13 @@ return {
 			providers = {
 				path = {
 					name = "Path",
+					override = {
+						resolve = function(source, item, callback)
+							return source:resolve(item, function(resolved_item)
+								callback(normalize_path_preview(resolved_item or item))
+							end)
+						end,
+					},
 				},
 				snippets = {
 					name = "Snip",
