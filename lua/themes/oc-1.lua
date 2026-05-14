@@ -1,6 +1,7 @@
 return {
 	dir = vim.fn.stdpath("config"),
 	name = "oc-1",
+    enabled = false,
 	lazy = false,
 	priority = 1000,
 	config = function()
